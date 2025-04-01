@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interactive Tableau Dashboard</title>
+    <script type="text/javascript" src="https://public.tableau.com/javascripts/api/tableau-2.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -24,7 +25,7 @@
         h1 {
             font-size: 2em;
         }
-        .dashboard {
+        .dashboard-container {
             width: 100%;
             height: 600px;
             margin-top: 20px;
@@ -55,15 +56,33 @@
         <h1>Interactive Tableau Dashboard</h1>
         <p>Explore the insights from our best group project.</p>
         <button class="btn" onclick="reloadDashboard()">Refresh Dashboard</button>
-        <iframe class="dashboard" src="https://public.tableau.com/views/BestGroupProject1/Dashboard1?:language=en-US&publish=yes&:sid=&:display_count=n&:origin=viz_share_link" frameborder="0"></iframe>
+        <div id="tableauViz" class="dashboard-container"></div>
     </div>
     <footer>
         <p>&copy; 2025 Interactive Dashboard. All rights reserved.</p>
     </footer>
     <script>
-        function reloadDashboard() {
-            document.querySelector('.dashboard').src += '';
+        var viz;
+        function loadDashboard() {
+            var containerDiv = document.getElementById("tableauViz");
+            var url = "https://public.tableau.com/views/BestGroupProject1/Dashboard1?:language=en-US&publish=yes&:display_count=n&:origin=viz_share_link";
+            var options = {
+                width: "100%",
+                height: "600px",
+                hideTabs: true,
+                onFirstInteractive: function () {
+                    console.log("Tableau Dashboard Loaded.");
+                }
+            };
+            viz = new tableau.Viz(containerDiv, url, options);
         }
+        function reloadDashboard() {
+            if (viz) {
+                viz.dispose();
+            }
+            loadDashboard();
+        }
+        window.onload = loadDashboard;
     </script>
 </body>
 </html>
